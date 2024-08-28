@@ -13,27 +13,27 @@
 #include <sys/stat.h> /* Defines structure of data returned by stat functions*/
 
 /* Constants for buffer sizes during read/write operations */
-#define READ_BUF_SIZE 1024  /* Size of buffer used for reading data */
-#define WRITE_BUF_SIZE 1024 /* Size of buffer used for writing data */
-#define BUF_FLUSH     -1    /* Indicator to flush the buffer */
+#define READ_BUF_SIZE 1024
+#define WRITE_BUF_SIZE 1024
+#define BUF_FLUSH     -1
 
 /* Command chaining types for the shell */
-#define CMD_NORM  0  /* Normal command execution */
-#define CMD_OR    1  /* Command chaining with logical OR */
-#define CMD_AND   2  /* Command chaining with logical AND */
-#define CMD_CHAIN 3  /* Command chaining */
+#define CMD_NORM  0
+#define CMD_OR    1
+#define CMD_AND   2
+#define CMD_CHAIN 3
 
 /* Flags used in number conversion functions */
-#define CONVERT_LOWERCASE 1  /* Flag to convert number to lowercase */
-#define CONVERT_UNSIGNED  2  /* Flag to treat number as unsigned */
+#define CONVERT_LOWERCASE 1
+#define CONVERT_UNSIGNED  2
 
 /* Flags for using different getline implementations */
-#define USE_GETLINE 0  /* Flag to use system getline() function */
-#define USE_STRTOK  0  /* Flag to use strtok() */
+#define USE_GETLINE 0
+#define USE_STRTOK  0
 
 /* Definitions related to command history */
-#define HIST_FILE ".simple_shell_history" /* File for command history */
-#define HIST_MAX  4096 /* Maximum number of commands to store in history */
+#define HIST_FILE ".simple_shell_history"
+#define HIST_MAX  4096
 
 extern char **environ;
 
