@@ -109,4 +109,13 @@ typedef struct builtin
 	int (*func)(info_t *);
 } builtin_table;
 
+/* shell_executor.c */
+/* Prototype: Main shell loop */
+int execute_shell(info_t *info, char **args);
+/* Prototype: Locate builtin command */
+int search_builtin(info_t *info);
+/* Prototype: Search for a command in PATH */
+void search_command(info_t *info);
+/* Prototype: Create a process to run command */
+void execute_command(info_t *info);
 #endif /* End of SHELL_H */
