@@ -118,4 +118,13 @@ int search_builtin(info_t *info);
 void search_command(info_t *info);
 /* Prototype: Create a process to run command */
 void execute_command(info_t *info);
+
+/* path_utils.c */
+/* Function to check if a given file is an executable command */
+int check_exec(info_t *info, char *path);
+/* Function to duplicate a substring of characters from a PATH string */
+char *copy_range(char *pathstr, int start, int stop);
+/* Function to locate a command within the PATH environment variable */
+char *locate_cmd(info_t *info, char *pathstr, char *cmd);
+
 #endif /* End of SHELL_H */
