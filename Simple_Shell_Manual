@@ -1,0 +1,49 @@
+.TH SIMPLE_SHELL 1 "August 2024" "1.0" "Simple Shell Manual"
+.SH NAME
+simple_shell \- A simple UNIX command interpreter.
+
+.SH SYNOPSIS
+.B simple_shell
+[option]...
+
+.SH DESCRIPTION
+.B simple_shell
+is a basic command-line interpreter for UNIX-like operating systems. It provides a simple interface to interact with the operating system by reading commands from the user and executing them. This shell supports standard input and output redirection, piping between commands, and simple built-in commands such as `cd`, `exit`, and `env`.
+
+The project aims to replicate the core functionalities of a typical shell in a simplified form, offering an educational insight into how command interpreters work. The project was developed as part of the ALX Software Engineering program to enhance understanding of system calls, process management, and file operations in UNIX.
+
+.SH OPTIONS
+.TP
+.B \-h, \-\-help
+Display this help and exit.
+.TP
+.B \-v, \-\-version
+Output version information and exit.
+
+.SH EXAMPLES
+.TP
+.B $ simple_shell
+Start the simple shell. It will read and execute commands until the user types `exit`.
+
+.TP
+.B $ simple_shell < script.sh
+Run the commands in `script.sh` and exit.
+
+.TP
+.B $ echo "ls -l" | simple_shell
+Passes the command `ls -l` to the shell for execution.
+
+.SH AUTHORS
+Achraf Sadeq, Elhoucine Smaili.
+
+.SH SEE ALSO
+.BR sh(1), 
+.BR bash(1), 
+.BR zsh(1)
+
+.SH BUGS
+No known bugs. Please report any issues to the authors.
+
+.SH COPYRIGHT 
+This project is part of the curriculum at Holberton School and ALX Africa (Software Engineering Programme - Casablanca). Redistribution and use of this software are strictly prohibited without prior permission from the authors.
+
