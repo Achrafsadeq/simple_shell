@@ -16,9 +16,9 @@
 #define TOKEN_DELIM " \t\r\n\a"
 
 /* Function prototypes */
-char **split_line(char *line, char *delim);
-char **split_logical_ops(char *line);
+char **split_line(char *line, const char *delim);
 int execute(char **args);
+int execute_command_chain(char *command);
 int launch(char **args);
 char *get_location(char *command);
 int shell_cd(char **args);
@@ -28,7 +28,6 @@ int shell_env(char **args);
 int shell_setenv(char **args);
 int shell_unsetenv(char **args);
 
-/* Built-in command functions */
 extern char **environ;
 
 #endif /* SHELL_H */

@@ -2,18 +2,13 @@
 
 int shell_cd(char **args)
 {
-    char *dir = args[1];
+    char *dir = args[1] ? args[1] : getenv("HOME");
     char cwd[PATH_MAX];
-    char *home = getenv("HOME");
 
-    if (dir == NULL)
-    {
-        dir = home;
-    }
-    else if (strcmp(dir, "-") == 0)
+    if (strcmp(dir, "-") == 0)
     {
         dir = getenv("OLDPWD");
-        if (dir == NULL)
+        if (!dir)
         {
             fprintf(stderr, "cd: OLDPWD not set\n");
             return 1;
@@ -27,7 +22,7 @@ int shell_cd(char **args)
         return 1;
     }
 
-    if (getcwd(cwd, sizeof(cwd)) != NULL)
+    if (getcwd(cwd, sizeof(cwd)))
     {
         setenv("OLDPWD", getenv("PWD"), 1);
         setenv("PWD", cwd, 1);
@@ -36,28 +31,19 @@ int shell_cd(char **args)
     {
         perror("getcwd");
     }
-
     return 1;
 }
 
 int shell_help(char **args)
 {
-    int i;
-    char *builtin_str[] = {
-        "cd",
-        "help",
-        "exit",
-        "env",
-        "setenv",
-        "unsetenv"
-    };
     (void)args;
+    char *builtin_str[] = {"cd", "help", "exit", "env", "setenv", "unsetenv"};
 
     printf("Simple Shell\n");
     printf("Type program names and arguments, and hit enter.\n");
     printf("The following are built in:\n");
 
-    for (i = 0; i < 6; i++)
+    for (int i = 0; i < 6; i++)
     {
         printf("  %s\n", builtin_str[i]);
     }
@@ -68,31 +54,23 @@ int shell_help(char **args)
 
 int shell_exit(char **args)
 {
-    int status = 0;
-
-    if (args[1] != NULL)
-    {
-        status = atoi(args[1]);
-    }
+    int status = args[1] ? atoi(args[1]) : 0;
     exit(status);
 }
 
 int shell_env(char **args)
 {
-    int i = 0;
     (void)args;
-
-    while (environ[i])
+    for (int i = 0; environ[i]; i++)
     {
         printf("%s\n", environ[i]);
-        i++;
     }
     return 1;
 }
 
 int shell_setenv(char **args)
 {
-    if (args[1] == NULL || args[2] == NULL)
+    if (!args[1] || !args[2])
     {
         fprintf(stderr, "Usage: setenv VARIABLE VALUE\n");
         return 1;
@@ -103,13 +81,12 @@ int shell_setenv(char **args)
         fprintf(stderr, "Failed to set environment variable\n");
         return 1;
     }
-
     return 1;
 }
 
 int shell_unsetenv(char **args)
 {
-    if (args[1] == NULL)
+    if (!args[1])
     {
         fprintf(stderr, "Usage: unsetenv VARIABLE\n");
         return 1;
@@ -120,6 +97,5 @@ int shell_unsetenv(char **args)
         fprintf(stderr, "Failed to unset environment variable\n");
         return 1;
     }
-
     return 1;
 }

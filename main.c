@@ -6,9 +6,7 @@ int main(void)
     size_t input_size = 0;
     ssize_t read_size;
     char **commands;
-    char **args;
     int status = 1;
-    int i, exec_status;
 
     while (status)
     {
@@ -27,37 +25,10 @@ int main(void)
         input[strcspn(input, "\n")] = '\0';
 
         commands = split_line(input, ";");
-        for (i = 0; commands[i] != NULL; i++)
+        for (int i = 0; commands[i] != NULL; i++)
         {
-            char **logical_ops = split_logical_ops(commands[i]);
-            int j;
-            int prev_status = 1;
-
-            for (j = 0; logical_ops[j] != NULL; j++)
-            {
-                if (strcmp(logical_ops[j], "&&") == 0)
-                {
-                    if (prev_status == 0)
-                        break;
-                    continue;
-                }
-                else if (strcmp(logical_ops[j], "||") == 0)
-                {
-                    if (prev_status != 0)
-                        break;
-                    continue;
-                }
-
-                args = split_line(logical_ops[j], TOKEN_DELIM);
-                exec_status = execute(args);
-                free(args);
-
-                prev_status = exec_status;
-            }
-
-            free(logical_ops);
-
-            if (exec_status == 0)
+            status = execute_command_chain(commands[i]);
+            if (status == 0)
                 break;
         }
         free(commands);
