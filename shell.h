@@ -154,5 +154,12 @@ char *str_copy_limit(char *dest, char *src, int n);
 char *str_append_limit(char *dest, char *src, int n);
 /* Searches for the first occurrence of a character in a string */
 char *str_find_char(char *s, char c);
-
+/* memory_utils.c */
+/* Prototype for filling memory with a byte */
+char *fill_memory(char *dest, char byte, unsigned int count);
+/* Prototype for releasing an array of strings */
+void release_memory(char **array);
+/* Prototype for resizing a memory block */
+void *resize_memory(void *ptr, unsigned int current_size,
+		unsigned int new_size);
 #endif /* End of SHELL_H */
