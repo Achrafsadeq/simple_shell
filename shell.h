@@ -167,4 +167,15 @@ void *resize_memory(void *ptr, unsigned int current_size,
 /* memory_utils2.c */
 /* releases memory allocated to a pointer and sets */
 int release_and_nullify(void **ptr);
+
+/* _atoi.c */
+int interactive(info_t *info);
+int is_delim(char c, char *delim);
+int _isalpha(int c);
+int _atoi(char *s);
+
+
+
+
+
 #endif /* End of SHELL_H */
