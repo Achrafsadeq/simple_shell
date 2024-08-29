@@ -127,4 +127,24 @@ char *copy_range(char *pathstr, int start, int stop);
 /* Function to locate a command within the PATH environment variable */
 char *locate_cmd(info_t *info, char *pathstr, char *cmd);
 
+/* string_operations.c */
+/* Prototype for calculating the length of a string */
+int calculate_strlen(char *str);
+/* Prototype for comparing two strings */
+int compare_strings(char *str1, char *str2);
+/* Prototype for finding a substring within a string */
+char *find_substring(const char *main_str, const char *sub_str);
+/* Prototype for concatenating two strings */
+char *concatenate_strings(char *destination, char *source);
+
+/* string_utils.c */
+/* Replicates a string from source to destination */
+char *copy_string(char *destination, const char *source);
+/* Creates a new copy of a string */
+char *duplicate_string(const char *input);
+/* Outputs a string to stdout */
+void print_string(const char *text);
+/* Sends a character to stdout */
+int output_char(char character);
+
 #endif /* End of SHELL_H */
