@@ -70,30 +70,29 @@ void print_string(const char *text)
 
 	while (text[pos] != '\0')
 	{
-		output_char(text[pos]);
+		_putchar(text[pos]);
 		pos++;
 	}
 }
 
 /**
- * output_char - sends a character to stdout
- * @character: The character to output
+ * _putchar - Sends a character to the standard output.
+ * @c: The character to output.
  *
- * Return: On success returns 1.
- * On failure, returns -1 and sets errno accordingly.
+ * Return: On success, returns 1.
+ * If an error occurs, -1 is returned, and errno is set.
  */
-int output_char(char character)
+int _putchar(char c)
 {
-	static int buffer_index;
-	static char buffer[WRITE_BUF_SIZE];
+	static int i;
+	static char buf[WRITE_BUF_SIZE];
 
-	if (character == BUF_FLUSH || buffer_index >= WRITE_BUF_SIZE)
+	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
 	{
-		write(1, buffer, buffer_index);
-		buffer_index = 0;
+		write(1, buf, i);
+		i = 0;
 	}
-	if (character != BUF_FLUSH)
-		buffer[buffer_index++] = character;
-
+	if (c != BUF_FLUSH)
+		buf[i++] = c;
 	return (1);
 }

@@ -145,7 +145,7 @@ char *duplicate_string(const char *input);
 /* Outputs a string to stdout */
 void print_string(const char *text);
 /* Sends a character to stdout */
-int output_char(char character);
+int _putchar(char c);
 
 /* string_utilities.c */
 /* Copies a string up to a specified number of characters */
