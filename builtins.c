@@ -1,77 +1,84 @@
 #include "shell.h"
 
 /**
- * change_directory - Switches to a specified directory
- * @parameters: Command arguments (parameters[1] is the target directory)
+ * shell_cd - Changes the current directory
+ * @args: Arguments (args[1] is the directory)
  *
- * Return: 1 to continue shell execution, 0 to terminate
+ * Return: 1 on success, 0 otherwise
  */
-int change_directory(char **parameters)
+int shell_cd(char **args)
 {
-    if (parameters[1] == NULL)
-    {
-        fprintf(stderr, "cd: missing directory argument\n");
-    }
-    else
-    {
-        if (chdir(parameters[1]) == -1)
-        {
-            perror("cd");
-        }
-    }
-    return 1;
+	if (args[1] == NULL)
+	{
+		fprintf(stderr, "Expected argument to \"cd\"\n");
+	}
+	else
+	{
+		if (chdir(args[1]) != 0)
+		{
+			perror("Error");
+		}
+	}
+	return (1);
 }
 
 /**
- * display_help - Shows available commands and usage information
- * @parameters: Command arguments (unused)
+ * shell_help - Prints help information
+ * @args: Arguments (not used)
  *
- * Return: Always returns 1 to continue shell execution
+ * Return: Always returns 1
  */
-int display_help(char **parameters)
+int shell_help(char **args)
 {
-    const char *builtin_commands[] = {
-        "cd", "help", "exit", "env"
-    };
-    int command_count = sizeof(builtin_commands) / sizeof(char *);
-    (void)parameters;
+	int i;
+	char *builtin_str[] = {
+		"cd",
+		"help",
+		"exit",
+		"env"
+	};
+	(void)args;
 
-    printf("Simple Shell - Available Commands:\n");
-    for (int i = 0; i < command_count; i++)
-    {
-        printf("  %s\n", builtin_commands[i]);
-    }
-    printf("For other programs, consult the man pages.\n");
-    return 1;
+	printf("Simple Shell\n");
+	printf("Type program names and arguments, and hit enter.\n");
+	printf("The following are built in:\n");
+
+	for (i = 0; i < 4; i++)
+	{
+		printf("  %s\n", builtin_str[i]);
+	}
+
+	printf("Use the man command for information on other programs.\n");
+	return (1);
 }
 
 /**
- * terminate_shell - Exits the shell program
- * @parameters: Command arguments (unused)
+ * shell_exit - Exits the shell
+ * @args: Arguments (not used)
  *
- * Return: Always returns 0 to signal shell termination
+ * Return: Always returns 0
  */
-int terminate_shell(char **parameters)
+int shell_exit(char **args)
 {
-    (void)parameters;
-    return 0;
+	(void)args;
+	return (0);
 }
 
 /**
- * show_environment - Displays the current environment variables
- * @parameters: Command arguments (unused)
+ * shell_env - Prints the current environment
+ * @args: Arguments (not used)
  *
- * Return: Always returns 1 to continue shell execution
+ * Return: Always returns 1
  */
-int show_environment(char **parameters)
+int shell_env(char **args)
 {
-    char **env = environ;
-    (void)parameters;
+	int i = 0;
+	(void)args;
 
-    while (*env)
-    {
-        printf("%s\n", *env);
-        env++;
-    }
-    return 1;
+	while (environ[i])
+	{
+		printf("%s\n", environ[i]);
+		i++;
+	}
+	return (1);
 }

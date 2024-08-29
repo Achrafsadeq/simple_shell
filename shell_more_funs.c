@@ -1,159 +1,129 @@
 #include "shell.h"
 
 /**
- * tokenize_input - Breaks a string into tokens
- * @input: The string to tokenize
+ * split_line - Splits a line into tokens
+ * @line: The line to split
  *
  * Return: An array of tokens
  */
-char **tokenize_input(char *input)
+char **split_line(char *line)
 {
-    int capacity = BUFFER_SIZE, index = 0;
-    char **tokens = malloc(capacity * sizeof(char*));
-    char *segment;
+	int bufsize = BUFFER_SIZE, position = 0;
+	char **tokens = malloc(bufsize * sizeof(char *));
+	char *token;
 
-    if (!tokens)
-    {
-        fprintf(stderr, "Memory allocation failed\n");
-        exit(EXIT_FAILURE);
-    }
+	if (!tokens)
+	{
+		fprintf(stderr, "Allocation error\n");
+		exit(EXIT_FAILURE);
+	}
 
-    segment = strtok(input, TOKEN_DELIM);
-    while (segment != NULL)
-    {
-        tokens[index] = segment;
-        index++;
+	token = strtok(line, TOKEN_DELIM);
+	while (token != NULL)
+	{
+		tokens[position] = token;
+		position++;
 
-        if (index >= capacity)
-        {
-            capacity += BUFFER_SIZE;
-            tokens = realloc(tokens, capacity * sizeof(char*));
-            if (!tokens)
-            {
-                fprintf(stderr, "Memory allocation failed\n");
-                exit(EXIT_FAILURE);
-            }
-        }
+		if (position >= bufsize)
+		{
+			bufsize += BUFFER_SIZE;
+			tokens = realloc(tokens, bufsize * sizeof(char *));
+			if (!tokens)
+			{
+				fprintf(stderr, "Allocation error\n");
+				exit(EXIT_FAILURE);
+			}
+		}
 
-        segment = strtok(NULL, TOKEN_DELIM);
-    }
-    tokens[index] = NULL;
-    return tokens;
+		token = strtok(NULL, TOKEN_DELIM);
+	}
+	tokens[position] = NULL;
+	return (tokens);
 }
 
 /**
- * process_command - Processes and executes a command
- * @tokens: Array of command arguments
+ * execute - Executes a command
+ * @args: Array of arguments
  *
- * Return: 1 if the shell should continue, 0 if it should exit
+ * Return: 1 if the shell should continue running, 0 if it should terminate
  */
-int process_command(char **tokens)
+int execute(char **args)
 {
-    int i;
-    const char *builtin_commands[] = {
-        "cd", "help", "exit", "env"
-    };
-    int (*builtin_functions[]) (char **) = {
-        &change_directory,
-        &display_help,
-        &terminate_shell,
-        &show_environment
-    };
+	int i;
+	char *builtin_str[] = {
+		"cd",
+		"help",
+		"exit",
+		"env"
+	};
+	int (*builtin_func[]) (char **) = {
+		&shell_cd,
+		&shell_help,
+		&shell_exit,
+		&shell_env
+	};
 
-    if (tokens[0] == NULL)
-        return 1;
+	if (args[0] == NULL)
+		return (1);
 
-    for (i = 0; i < 4; i++)
-    {
-        if (strcmp(tokens[0], builtin_commands[i]) == 0)
-            return (*builtin_functions[i])(tokens);
-    }
+	for (i = 0; i < 4; i++)
+	{
+		if (strcmp(args[0], builtin_str[i]) == 0)
+			return ((*builtin_func[i])(args));
+	}
 
-    return execute_program(tokens);
+	return (launch(args));
 }
 
 /**
- * execute_program - Launches an external program
- * @tokens: Array of command arguments
+ * launch - Launches a program
+ * @args: Array of arguments
  *
- * Return: Always returns 1 to continue shell execution
+ * Return: Always returns 1, to continue execution
  */
-int execute_program(char **tokens)
+int launch(char **args)
 {
-    pid_t child_pid;
-    int status;
-    char *program_path;
+	pid_t pid;
+	int status;
+	char *command_path;
 
-    child_pid = fork();
-    if (child_pid == 0)
-    {
-        /* Child process */
-        program_path = find_executable(tokens[0]);
-        if (program_path == NULL)
-        {
-            fprintf(stderr, "%s: command not found\n", tokens[0]);
-            exit(EXIT_FAILURE);
-        }
+	pid = fork();
+	if (pid == 0)
+	{
+		/* Child process */
+		command_path = get_location(args[0]);
+		if (command_path == NULL)
+		{
+			fprintf(stderr, "%s: command not found\n", args[0]);
+			exit(EXIT_FAILURE);
+		}
 
-        if (execve(program_path, tokens, environ) == -1)
-        {
-            perror("execve");
-        }
-        exit(EXIT_FAILURE);
-    }
-    else if (child_pid < 0)
-    {
-        /* Fork error */
-        perror("fork");
-    }
-    else
-    {
-        /* Parent process */
-        do {
-            waitpid(child_pid, &status, WUNTRACED);
-        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
-    }
+		if (execve(command_path, args, environ) == -1)
+		{
+			perror("Error:");
+		}
+		exit(EXIT_FAILURE);
+	}
+	else if (pid < 0)
+	{
+		/* Error forking */
+		perror("Error:");
+	}
+	else
+	{
+		/* Parent process */
+		do {
+			waitpid(pid, &status, WUNTRACED);
+		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+	}
 
-    return 1;
+	return (1);
 }
 
 /**
- * find_executable - Locates the full path of a command
+ * get_location - Gets the location of a command
  * @command: The command to locate
  *
- * Return: The full path of the command, or NULL if not found
+ * Return: The path of the command or NULL if not found
  */
-char *find_executable(char *command)
-{
-    char *path_var, *path_copy, *dir, *full_path;
-    int command_len, dir_len;
-    struct stat file_stat;
 
-    path_var = getenv("PATH");
-    if (path_var)
-    {
-        path_copy = strdup(path_var);
-        command_len = strlen(command);
-        dir = strtok(path_copy, ":");
-        while (dir != NULL)
-        {
-            dir_len = strlen(dir);
-            full_path = malloc(command_len + dir_len + 2);
-            sprintf(full_path, "%s/%s", dir, command);
-
-            if (stat(full_path, &file_stat) == 0)
-            {
-                free(path_copy);
-                return full_path;
-            }
-            free(full_path);
-            dir = strtok(NULL, ":");
-        }
-        free(path_copy);
-        if (stat(command, &file_stat) == 0)
-        {
-            return strdup(command);
-        }
-    }
-    return NULL;
-}

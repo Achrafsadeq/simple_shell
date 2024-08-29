@@ -16,16 +16,16 @@
 #define TOKEN_DELIM " \t\r\n\a"
 
 /* Function prototypes */
-char **tokenize_input(char *input);
-int process_command(char **tokens);
-int execute_program(char **tokens);
-char *find_executable(char *command);
-int change_directory(char **parameters);
-int display_help(char **parameters);
-int terminate_shell(char **parameters);
-int show_environment(char **parameters);
+char **split_line(char *line);
+int execute(char **args);
+int launch(char **args);
+char *get_location(char *command);
+int shell_cd(char **args);
+int shell_help(char **args);
+int shell_exit(char **args);
+int shell_env(char **args);
 
-/* Environment variables */
+/* Built-in command functions */
 extern char **environ;
 
 #endif /* SHELL_H */

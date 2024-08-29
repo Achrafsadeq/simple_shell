@@ -1,41 +1,41 @@
 #include "shell.h"
 
 /**
- * main - Entry point for the simple shell program
+ * main - Entry point for the simple shell
  *
  * Return: Always 0 (Success)
  */
 int main(void)
 {
-    char *command_line = NULL;
-    size_t buffer_size = 0;
-    ssize_t chars_read;
-    char **command_tokens;
-    int shell_active = 1;
+	char *input = NULL;
+	size_t input_size = 0;
+	ssize_t read_size;
+	char **args;
+	int status = 1;
 
-    while (shell_active)
-    {
-        if (isatty(STDIN_FILENO))
-            printf("shell> ");
+	while (status)
+	{
+		if (isatty(STDIN_FILENO))
+			printf("($) ");
 
-        chars_read = getline(&command_line, &buffer_size, stdin);
+		read_size = getline(&input, &input_size, stdin);
 
-        if (chars_read == -1)
-        {
-            if (isatty(STDIN_FILENO))
-                printf("\n");
-            break;
-        }
+		if (read_size == -1)
+		{
+			if (isatty(STDIN_FILENO))
+				printf("\n");
+			break;
+		}
 
-        /* Remove trailing newline */
-        command_line[strcspn(command_line, "\n")] = '\0';
+		/* Remove newline character */
+		input[strcspn(input, "\n")] = '\0';
 
-        command_tokens = tokenize_input(command_line);
-        shell_active = process_command(command_tokens);
+		args = split_line(input);
+		status = execute(args);
 
-        free(command_tokens);
-    }
+		free(args);
+	}
 
-    free(command_line);
-    return (0);
+	free(input);
+	return (0);
 }
