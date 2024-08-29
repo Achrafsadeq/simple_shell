@@ -174,8 +174,12 @@ int is_delim(char c, char *delim);
 int _isalpha(int c);
 int _atoi(char *s);
 
-
-
+/* _erratoi.c */
+int _erratoi(char *);
+void print_error(info_t *, char *);
+int print_d(int, int);
+char *convert_number(long int, int, int);
+void remove_comments(char *);
 
 
 #endif /* End of SHELL_H */
