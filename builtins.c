@@ -1,5 +1,13 @@
 #include "shell.h"
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <errno.h>
 /**
  * builtin_exit - Exit the shell with a given status
  * @args: Array of command arguments
