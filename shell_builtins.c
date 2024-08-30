@@ -1,5 +1,6 @@
 #include "shell_core.h"
 
+
 int builtin_change_directory(char **tokens)
 {
     const char *target_dir = tokens[1];
@@ -52,8 +53,6 @@ int builtin_display_help(char **args)
         printf("Use the man command for information on other programs.\n");
         return 1;
     }
-
-    /* Add specific help for each builtin command if needed */
 
     return 0;
 }
