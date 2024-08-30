@@ -16,6 +16,20 @@
 #define DELIMITER_TOKENS " \t\r\n\a"
 #define BUFFER_SIZE 1024
 #define MAX_ARGS 64
+#define MAX_ALIASES 100
+ 
+ typedef struct {
+     char *name;
+     char *value;
+ } Alias;
+ 
+ extern Alias aliases[MAX_ALIASES];
+ extern int alias_count;
+ 
+ int builtin_alias(char **args);
+ char *get_alias_value(const char *name);
+ void add_or_update_alias(const char *name, const char *value);
+
 
 /* Function declarations */
 char **tokenize_input(char *input, const char *delim);
